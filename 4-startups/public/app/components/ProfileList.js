@@ -1,74 +1,62 @@
 import React, { Component } from 'react'
 import ListItem from '../components/ListItem'
-import Featured from '../components/Featured'
-
+import api from '../utils/api'
+import store from '../stores/store'
+import actions from '../actions/actions'
+import { connect } from 'react-redux'
 
 class ProfileList extends Component {
 
 	constructor(props, context){
 		super(props, context)
 		this.updateProfile = this.updateProfile.bind(this)
-		this.addProfile = this.addProfile.bind(this)
-		this.selectProfile = this.selectProfile.bind(this)
+		this.createProfile = this.createProfile.bind(this)
 		this.state = {
-			selected: null,
 			profile: {
-				name:'',
-				location:'',
-				description:''
-			},
-			selectedProfile: {
-				name:'',
-				location:'',
-				description:''
-			},
-			profiles:[
-				{id:0, name:'travis kalanick', location:'california', description:'founder of Uber'},
-				{id:1, name:'steve jobs', location:'california', description:'founder of apple'},
-				{id:2, name:'dennis crowley', location:'new york', description:'founder of foursquare'}
-			]
+				firstName:'',
+				lastName:'',
+				email:''
+			}
 		}
 	}
 
 	updateProfile(event){
-		var updatedProfile = Object.assign({}, this.state.profile)
-		updatedProfile[event.target.id] = event.target.value // YES!
-
+		console.log('updateProfile: '+event.target.id+' = '+event.target.value)
+		var copy = Object.assign({}, this.state.profile)
+		copy[event.target.id] = event.target.value
 		this.setState({
-			profile: updatedProfile
+			profile: copy
 		})
 	}
 
-	addProfile(event){
-		event.preventDefault()
-		console.log('ADD PROFILE: '+JSON.stringify(this.state.profile))
-		var updatedProfile = Object.assign({}, this.state.profile)
-		updatedProfile['id'] = this.state.profiles.length
-
-		var updatedProfiles = Object.assign([], this.state.profiles)
-		updatedProfiles.push(updatedProfile)
-
-		this.setState({
-			profiles: updatedProfiles
+	createProfile(){
+		console.log('Create Profile: '+JSON.stringify(this.state.profile))
+		api.handlePost('/api/profile', this.state.profile, function(err, response){
+			if(err){
+				alert(err.message)
+				return
+			}
+			console.log('PROFILE CREATED: '+JSON.stringify(response))
+			store.dispatch(actions.profileCreated(response.results))
 		})
 	}
 
-	selectProfile(profileId){
-		var profile = this.state.profiles[profileId]
-		console.log('selectProfile: '+JSON.stringify(profile))
-
-		this.setState({
-			selectedProfile: profile
+	componentDidMount(){
+		console.log('componentDidMount')
+		api.handleGet('/api/profile', {}, function(err, response){
+			if(err){
+				alert(err.message)
+				return
+			}
+			store.dispatch(actions.profilesReceived(response.results))
 		})
-
 	}
-
 
 	render(){
-		var _this = this
-		var list = this.state.profiles.map(function(profile, i){
-			return <ListItem key={i} text={profile} click={_this.selectProfile} />
-
+		var list = this.props.profiles.map(function(profile, i){
+			return(
+				<li key={i}>{profile.firstName}</li>
+			)
 		})
 
 		return (
@@ -79,16 +67,20 @@ class ProfileList extends Component {
 				</ol>
 
 				<h2>Add Profile</h2>
-				<input id="name" onChange={this.updateProfile} type="text" placeholder="Name" /><br />
-				<input id="location" onChange={this.updateProfile} type="text" placeholder="Location" /><br />
-				<a onClick={this.addProfile} href="#">Add</a>
-
-				<hr />
-
-				<Featured entity={this.state.selectedProfile} />
+				<input onChange={this.updateProfile} type="text" id="firstName" placeholder="First Name" /><br />
+				<input onChange={this.updateProfile} type="text" id="lastName" placeholder="Last Name" /><br />
+				<input onChange={this.updateProfile} type="text" id="email" placeholder="Email" /><br />
+				<button onClick={this.createProfile}>Add</button>
 			</div>
 		)
 	}
 }
 
-export default ProfileList
+const stateToProps = function(state){
+	console.log('stateToProps: '+JSON.stringify(state))
+	return {
+		profiles: state.profileReducer.profilesArray
+	}
+}
+
+export default connect (stateToProps)(ProfileList)

@@ -91,7 +91,7 @@ router.post('/:resource', function(req, res, next) {
 		return
 	}
 
-	controller.post(req.body, function(err, startup){
+	controller.post(req.body, function(err, result){
 		if (err){
 			res.json({
 				confirmation:'fail',
@@ -103,17 +103,14 @@ router.post('/:resource', function(req, res, next) {
 
 		res.json({
 			confirmation:'success',
-			results: startup
+			result: result
 		})
 
 		return
 	})
 
 
-
 });
-
-
 
 
 module.exports = router;

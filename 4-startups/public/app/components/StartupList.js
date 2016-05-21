@@ -9,13 +9,36 @@ class StartupList extends Component {
 
 	constructor(props, context){
 		super(props, context)
+		this.updateStartup = this.updateStartup.bind(this)
+		this.createStartup = this.createStartup.bind(this)
 		this.state = {
 			startup: {
 				name:'',
-				location:'',
-				description:''
+				founder:'',
+				url:''
 			}
 		}
+	}
+
+	updateStartup(event){
+		console.log('updateStartup: '+event.target.id+' = '+event.target.value)
+		var copy = Object.assign({}, this.state.startup)
+		copy[event.target.id] = event.target.value 
+		this.setState({
+			startup: copy
+		})
+	}
+
+	createStartup(){
+		console.log('Create Startup: '+JSON.stringify(this.state.startup))
+		api.handlePost('/api/startup', this.state.startup, function(err, response){
+			if(err){
+				alert(err.message)
+				return
+			}
+			console.log('STARTUP CREATED: '+JSON.stringify(response))
+			store.dispatch(actions.startupCreated(response.results))
+		})
 	}
 
 	componentDidMount(){
@@ -25,7 +48,6 @@ class StartupList extends Component {
 				alert(err.message)
 				return
 			}
-
 			store.dispatch(actions.startupsReceived(response.results))
 		})
 	}
@@ -33,19 +55,24 @@ class StartupList extends Component {
 	render(){
 		var list = this.props.startups.map(function(startup, i){
 			return(
-				<li key={i}>(startup.name</li>
+				<li key={i}>{startup.name}</li>
 			)
 		})
 
 		return (
 			<div className="list-box">
+				Startup List
 				<ol>
 					{list}
 				</ol>
 	
 				<h2>Add Startup</h2>
+				<input onChange={this.updateStartup} type="text" id="name" placeholder="Name" /><br />
+				<input onChange={this.updateStartup} type="text" id="founder" placeholder="Founder" /><br />
+				<input onChange={this.updateStartup} type="text" id="url" placeholder="URL" /><br />
+				<button onClick={this.createStartup}>Add</button>
 			</div>
-		)
+			)
 	}
 
 }
