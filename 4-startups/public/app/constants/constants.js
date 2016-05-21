@@ -1,0 +1,4 @@
+module.exports = {
+
+	STARTUPS_RECEIVED: 'STARTUPS_RECEIVED'
+}
