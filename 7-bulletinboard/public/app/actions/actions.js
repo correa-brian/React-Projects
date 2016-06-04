@@ -15,5 +15,12 @@ export default {
 			communities: communities
 		}
 	},
+	
+	currentUserReceived: function(user){
+		return {
+			type: constants.CURRENT_USER_RECEIVED,
+			user: user
+		}
+	}
 
 }

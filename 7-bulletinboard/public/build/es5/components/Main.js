@@ -17,6 +17,8 @@ var Communities = _interopRequire(require("../components/Communities"));
 
 var Register = _interopRequire(require("../components/layout/Register"));
 
+var Account = _interopRequire(require("../components/layout/Account"));
+
 var Main = (function (Component) {
 	function Main() {
 		_classCallCheck(this, Main);
@@ -44,6 +46,7 @@ var Main = (function (Component) {
 
 				if (page == "register") content = React.createElement(Register, null);
 
+				if (page == "account") content = React.createElement(Account, null);
 
 				return React.createElement(
 					"div",

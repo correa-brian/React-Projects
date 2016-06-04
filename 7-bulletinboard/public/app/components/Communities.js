@@ -10,6 +10,7 @@ class Communities extends Component {
 		super(props, context)
 		this.updateNewCommunity = this.updateNewCommunity.bind(this)
 		this.addCommunity = this.addCommunity.bind(this)
+		this.viewCommunity = this.viewCommunity.bind(this)
 		this.state = {
 			newCommunity: {
 				name:'',
@@ -56,6 +57,10 @@ class Communities extends Component {
 		})
 	}
 
+	viewCommunity(event){
+		console.log('viewCommunity')
+	}
+
 	render(){
 
 		var list = this.props.communities.map(function(community, i){
@@ -74,6 +79,8 @@ class Communities extends Component {
 				<input onChange={this.updateNewCommunity} type="text" id="city" name="city" placeholder="City" /><br />
 				<input onChange={this.updateNewCommunity} type="text" id="state" name="state" placeholder="State" /><br />
 				<button onClick={this.addCommunity}>Add</button>
+
+				<button onClick={this.viewCommunity}>viewCommunity</button>
 			</div>
 		)
 	}
@@ -89,9 +96,3 @@ const stateToProps = function(state){
 }
 
 export default connect (stateToProps)(Communities)
-
-
-
-
-
-

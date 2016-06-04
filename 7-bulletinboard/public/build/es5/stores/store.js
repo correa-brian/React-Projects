@@ -11,12 +11,15 @@ var thunk = _interopRequire(require("redux-thunk"));
 
 var communityReducer = _interopRequire(require("../reducers/communityReducer"));
 
+var accountReducer = _interopRequire(require("../reducers/accountReducer"));
+
 
 
 
 // Combine Reducers
 var reducers = combineReducers({
-    communityReducer: communityReducer
+    communityReducer: communityReducer,
+    accountReducer: accountReducer
 });
 
 // Create Store

@@ -29,6 +29,7 @@ var Communities = (function (Component) {
 		_get(Object.getPrototypeOf(Communities.prototype), "constructor", this).call(this, props, context);
 		this.updateNewCommunity = this.updateNewCommunity.bind(this);
 		this.addCommunity = this.addCommunity.bind(this);
+		this.viewCommunity = this.viewCommunity.bind(this);
 		this.state = {
 			newCommunity: {
 				name: "",
@@ -84,6 +85,13 @@ var Communities = (function (Component) {
 			writable: true,
 			configurable: true
 		},
+		viewCommunity: {
+			value: function viewCommunity(event) {
+				console.log("viewCommunity");
+			},
+			writable: true,
+			configurable: true
+		},
 		render: {
 			value: function render() {
 				var list = this.props.communities.map(function (community, i) {
@@ -121,6 +129,11 @@ var Communities = (function (Component) {
 						"button",
 						{ onClick: this.addCommunity },
 						"Add"
+					),
+					React.createElement(
+						"button",
+						{ onClick: this.viewCommunity },
+						"viewCommunity"
 					)
 				);
 			},

@@ -1,6 +1,6 @@
 var Profile = require('../models/Profile');
 var mongoose = require('mongoose');
-
+var bcrypt = require('bcrypt');
 
 // - - - - - - - - - - - - - - - - - - - - HELPER METHODS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -59,6 +59,10 @@ module.exports = {
 	},
 
 	post: function(profileInfo, completion){
+		var password = profileInfo['password']
+		var hashedPassword = bcrypt.hashSync(password, 10)
+		profileInfo['password'] = hashedPassword
+
 		Profile.create(profileInfo, function(err, profile){
 			if (err){
 				completion({confirmation:'fail', message:err.message}, null);

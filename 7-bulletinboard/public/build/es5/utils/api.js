@@ -28,9 +28,22 @@ module.exports = {
 		superagent.post(endpoint).send(body).set("Accept", "application/json").end(function (err, res) {
 			if (err) {
 				if (completion != null) completion(err, null);
-			} else {
-				if (completion != null) completion(null, res.body);
+
+				return;
 			}
+			// else {
+			// 	if (completion != null)
+			//    		completion(null, res.body)
+			// }
+
+			if (completion != null) {
+				if (res.body.confirmation == "success") {
+					completion(null, res.body);
+				} else {
+					completion({ message: res.body.message }, null);
+				}
+			}
+
 		});
 	},
 
